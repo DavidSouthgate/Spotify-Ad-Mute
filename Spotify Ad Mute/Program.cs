@@ -46,6 +46,8 @@ namespace Spotify_Ad_Mute
         static void Main(string[] args)
         {
 
+            DateTime last_no_process_error = new DateTime();
+
             //Output initial command line stuff
             Console.WriteLine("Spotfy Ad Mute [Version DEV]");
             Console.WriteLine("(c) 2015-2016 David Southgate");
@@ -61,15 +63,15 @@ namespace Spotify_Ad_Mute
             Volume_Control.unmute();
             bool mute = false;
 
-            //Get spotify process
-            int process_id = get_spotify_pid();
-
             //Boolean flag used to stop main progran while loop. Continues whilst true.
             bool loop_again = true;
 
             //Loop while loop_again is true
             while(loop_again == true)
             {
+
+                //Get spotify process id
+                int process_id = get_spotify_pid();
 
                 //Get the window title of the running spotify installation
                 string window_title = Process.GetProcessById(process_id).MainWindowTitle;
@@ -78,16 +80,15 @@ namespace Spotify_Ad_Mute
                 if(window_title == "")
                 {
 
-                    //Get spotify process again
-                    process_id = get_spotify_pid();
-
-                    //If valid process id still not found. Output error and stop program
-                    if(process_id == 0)
+                    //Output error if one hasn't been outputted in the last 10 seconds.
+                    if((DateTime.Now - last_no_process_error).TotalSeconds > 10)
                     {
                         Console.WriteLine();
                         Console.WriteLine("Application no longer running (or was never running)");
                         Console.WriteLine("Application does not work when minimised to tray!");
-                        loop_again = false;
+
+                        //Set last no process date time to now
+                        last_no_process_error = DateTime.Now;
                     }
                 }
 
