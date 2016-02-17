@@ -70,12 +70,16 @@ namespace Spotify_Ad_Mute
         static void Main(string[] args)
         {
 
+            //Get the program version
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            string version = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+
             DateTime last_no_process_error = new DateTime();
             string now_playing_artist = "";
             string now_playing_track = "";
 
             //Output initial command line stuff
-            Console.WriteLine("Spotfy Ad Mute [Version DEV]");
+            Console.WriteLine("Spotfy Ad Mute [Version " + version + "]");
             Console.WriteLine("(c) 2015-2016 David Southgate");
             Console.WriteLine();
 
