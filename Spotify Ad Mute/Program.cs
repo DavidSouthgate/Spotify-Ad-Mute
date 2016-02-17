@@ -12,46 +12,76 @@ namespace Spotify_Ad_Mute
     class Program
     {
 
+        /// <summary>
+        /// Returns the windows process ID of a running installation of spotify that has a valid window title.
+        /// WARNING: Any other process called spotify can be caught by this. Unlikely but VERY possible.
+        /// </summary>
+        /// <returns>Process ID</returns>
         static int get_spotify_pid()
         {
+
+            //Set process ID to 0. If no processes are found, 0 will be returned
             int process_id = 0;
+
+            //Get processes that have the name "Spotify"
             Process[] process_list = Process.GetProcessesByName("Spotify");
 
+            //Loof for every spotify process
             for (int i = 0; i < process_list.Length; i++)
             {
+
+                //If this process has a valid window title
                 if (process_list[i].MainWindowTitle != "")
                 {
+
+                    //Change process ID to this process ID
                     process_id = process_list[i].Id;
                 }
             }
+
+            //Return the process ID
             return process_id;
         }
 
         static void Main(string[] args)
         {
-            Console.WriteLine("Spotfy Ad Mute [Version 1.0.0.0]");
-            Console.WriteLine("(c) 2015 David Southgate");
+
+            //Output initial command line stuff
+            Console.WriteLine("Spotfy Ad Mute [Version DEV]");
+            Console.WriteLine("(c) 2015-2016 David Southgate");
             Console.WriteLine();
+
+            //Start the program once a key has been pressed
             Console.WriteLine("Press Any Key To Start");
             Console.ReadKey();
             Console.WriteLine();
 
+            //Unmute the volume and store that status in a boolean
             Console.WriteLine("Unmuting Volume");
             Volume_Control.unmute();
             bool mute = false;
 
+            //Get spotify process
             int process_id = get_spotify_pid();
+
+            //Boolean flag used to stop main progran while loop. Continues whilst true.
             bool loop_again = true;
 
+            //Loop while loop_again is true
             while(loop_again == true)
             {
+
+                //Get the window title of the running spotify installation
                 string window_title = Process.GetProcessById(process_id).MainWindowTitle;
 
                 //If blank window title
                 if(window_title == "")
                 {
+
+                    //Get spotify process again
                     process_id = get_spotify_pid();
 
+                    //If valid process id still not found. Output error and stop program
                     if(process_id == 0)
                     {
                         Console.WriteLine();
@@ -64,6 +94,8 @@ namespace Spotify_Ad_Mute
                 //If not playing music or ad is playing
                 else if(window_title == "Spotify")
                 {
+
+                    //If not muted, mute
                     if(mute == false)
                     {
                         Console.WriteLine("Muting Volume");
@@ -72,8 +104,11 @@ namespace Spotify_Ad_Mute
                     }
                 }
 
+                //Otherwise, should be playing music
                 else
                 {
+
+                    //If muted, unmute
                     if (mute == true)
                     {
                         Console.WriteLine("Unmuting Volume");
@@ -82,9 +117,11 @@ namespace Spotify_Ad_Mute
                     }
                 }
 
+                //Sleep for 1 seccond
                 System.Threading.Thread.Sleep(1000);
             }
 
+            //Press any key to stop the program
             Console.WriteLine();
             Console.WriteLine("Press Any Key To Exit");
             Console.ReadKey();
