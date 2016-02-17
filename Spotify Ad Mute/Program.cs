@@ -63,11 +63,8 @@ namespace Spotify_Ad_Mute
             Volume_Control.unmute();
             bool mute = false;
 
-            //Boolean flag used to stop main progran while loop. Continues whilst true.
-            bool loop_again = true;
-
             //Loop while loop_again is true
-            while(loop_again == true)
+            while(true)
             {
 
                 //Get spotify process id
@@ -84,8 +81,7 @@ namespace Spotify_Ad_Mute
                     if((DateTime.Now - last_no_process_error).TotalSeconds > 10)
                     {
                         Console.WriteLine();
-                        Console.WriteLine("Application no longer running (or was never running)");
-                        Console.WriteLine("Application does not work when minimised to tray!");
+                        Console.WriteLine("Spotify process not found. Is spotify running and not minimused to the tray?");
 
                         //Set last no process date time to now
                         last_no_process_error = DateTime.Now;
@@ -121,11 +117,6 @@ namespace Spotify_Ad_Mute
                 //Sleep for 1 seccond
                 System.Threading.Thread.Sleep(1000);
             }
-
-            //Press any key to stop the program
-            Console.WriteLine();
-            Console.WriteLine("Press Any Key To Exit");
-            Console.ReadKey();
         }
     }
 }
