@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 namespace Spotify_Ad_Mute
 {
@@ -47,6 +48,8 @@ namespace Spotify_Ad_Mute
         {
 
             DateTime last_no_process_error = new DateTime();
+            string now_playing_artist = "";
+            string now_playing_track = "";
 
             //Output initial command line stuff
             Console.WriteLine("Spotfy Ad Mute [Version DEV]");
@@ -59,7 +62,6 @@ namespace Spotify_Ad_Mute
             Console.WriteLine();
 
             //Unmute the volume and store that status in a boolean
-            Console.WriteLine("Unmuting Volume");
             Volume_Control.unmute();
             bool mute = false;
 
@@ -80,8 +82,7 @@ namespace Spotify_Ad_Mute
                     //Output error if one hasn't been outputted in the last 10 seconds.
                     if((DateTime.Now - last_no_process_error).TotalSeconds > 10)
                     {
-                        Console.WriteLine();
-                        Console.WriteLine("Spotify process not found. Is spotify running and not minimused to the tray?");
+                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimused to the tray?");
 
                         //Set last no process date time to now
                         last_no_process_error = DateTime.Now;
@@ -95,7 +96,7 @@ namespace Spotify_Ad_Mute
                     //If not muted, mute
                     if(mute == false)
                     {
-                        Console.WriteLine("Muting Volume");
+                        Console.WriteLine("Now Playing: Paused or Ad [Volume Muted]");
                         Volume_Control.mute();
                         mute = true;
                     }
@@ -108,9 +109,37 @@ namespace Spotify_Ad_Mute
                     //If muted, unmute
                     if (mute == true)
                     {
-                        Console.WriteLine("Unmuting Volume");
                         Volume_Control.unmute();
                         mute = false;
+                    }
+
+                    //Use regex to detect now playing
+                    Regex r = new Regex("([^-]*)(-)([^-]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                    Match m = r.Match(window_title);
+                    if (m.Success)
+                    {
+
+                        //Get new now playing details
+                        string now_playing_artist_new = m.Groups[1].ToString().Trim();
+                        string now_playing_track_new = m.Groups[3].ToString().Trim();
+
+                        //If new now playing details different than old
+                        if (now_playing_artist_new != now_playing_artist && now_playing_track_new != now_playing_track)
+                        {
+
+                            //Change now playing variables to new values
+                            now_playing_artist = now_playing_artist_new;
+                            now_playing_track = now_playing_track_new;
+
+                            //Output now playing
+                            Console.WriteLine("Now Playing: '" + now_playing_track + "' by '" + now_playing_artist + "'");
+                        }
+                    }
+
+                    //If regex failed to get now playing, output generic message
+                    else
+                    {
+                        Console.WriteLine("Now Playing Music");
                     }
                 }
 
