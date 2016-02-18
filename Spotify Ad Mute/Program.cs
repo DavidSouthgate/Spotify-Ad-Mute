@@ -141,7 +141,7 @@ namespace Spotify_Ad_Mute
                     //Output error if one hasn't been outputted in the last 10 seconds.
                     if ((DateTime.Now - last_no_process_error).TotalSeconds > 10)
                     {
-                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimused to the tray?");
+                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimised to the tray?");
 
                         //Set last no process date time to now
                         last_no_process_error = DateTime.Now;
