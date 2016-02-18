@@ -103,7 +103,7 @@ namespace Spotify_Ad_Mute
                 string window_title = Process.GetProcessById(process_id).MainWindowTitle;
 
                 //Use regex to detect now playing
-                Regex r = new Regex("([^-]*)(-)([^-]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Regex r = new Regex("([^-]*)( - )([^-]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
                 Match m = r.Match(window_title);
 
                 //If successful match, something is playing
