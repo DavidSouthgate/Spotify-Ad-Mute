@@ -102,35 +102,12 @@ namespace Spotify_Ad_Mute
                 //Get the window title of the running spotify installation
                 string window_title = Process.GetProcessById(process_id).MainWindowTitle;
 
-                //If blank window title
-                if(window_title == "")
-                {
+                //Use regex to detect now playing
+                Regex r = new Regex("([^-]*)(-)([^-]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                Match m = r.Match(window_title);
 
-                    //Output error if one hasn't been outputted in the last 10 seconds.
-                    if((DateTime.Now - last_no_process_error).TotalSeconds > 10)
-                    {
-                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimused to the tray?");
-
-                        //Set last no process date time to now
-                        last_no_process_error = DateTime.Now;
-                    }
-                }
-
-                //If not playing music or ad is playing
-                else if(window_title == "Spotify")
-                {
-
-                    //If not muted, mute
-                    if(mute == false)
-                    {
-                        Console.WriteLine("Now Playing: Paused or Ad [Volume Muted]");
-                        Volume_Control.mute();
-                        mute = true;
-                    }
-                }
-
-                //Otherwise, should be playing music
-                else
+                //If successful match, something is playing
+                if (m.Success)
                 {
 
                     //If muted, unmute
@@ -140,33 +117,46 @@ namespace Spotify_Ad_Mute
                         mute = false;
                     }
 
-                    //Use regex to detect now playing
-                    Regex r = new Regex("([^-]*)(-)([^-]*)", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-                    Match m = r.Match(window_title);
-                    if (m.Success)
+                    //Get new now playing details
+                    string now_playing_artist_new = m.Groups[1].ToString().Trim();
+                    string now_playing_track_new = m.Groups[3].ToString().Trim();
+
+                    //If new now playing details different than old
+                    if (now_playing_artist_new != now_playing_artist && now_playing_track_new != now_playing_track)
                     {
 
-                        //Get new now playing details
-                        string now_playing_artist_new = m.Groups[1].ToString().Trim();
-                        string now_playing_track_new = m.Groups[3].ToString().Trim();
+                        //Change now playing variables to new values
+                        now_playing_artist = now_playing_artist_new;
+                        now_playing_track = now_playing_track_new;
 
-                        //If new now playing details different than old
-                        if (now_playing_artist_new != now_playing_artist && now_playing_track_new != now_playing_track)
-                        {
-
-                            //Change now playing variables to new values
-                            now_playing_artist = now_playing_artist_new;
-                            now_playing_track = now_playing_track_new;
-
-                            //Output now playing
-                            Console.WriteLine("Now Playing: '" + now_playing_track + "' by '" + now_playing_artist + "'");
-                        }
+                        //Output now playing
+                        Console.WriteLine("Now Playing: '" + now_playing_track + "' by '" + now_playing_artist + "'");
                     }
+                }
 
-                    //If regex failed to get now playing, output generic message
-                    else
+                //If blank window title
+                else if (window_title == "")
+                {
+
+                    //Output error if one hasn't been outputted in the last 10 seconds.
+                    if ((DateTime.Now - last_no_process_error).TotalSeconds > 10)
                     {
-                        Console.WriteLine("Now Playing Music");
+                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimused to the tray?");
+
+                        //Set last no process date time to now
+                        last_no_process_error = DateTime.Now;
+                    }
+                }
+
+                //Otherwise, nothing is playing
+                else
+                {
+                    //If not muted, mute
+                    if (mute == false)
+                    {
+                        Console.WriteLine("Now Playing: Paused or Ad [Volume Muted]");
+                        Volume_Control.mute();
+                        mute = true;
                     }
                 }
 
