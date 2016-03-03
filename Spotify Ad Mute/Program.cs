@@ -95,7 +95,6 @@ namespace Spotify_Ad_Mute
             //Loop while loop_again is true
             while(true)
             {
-
                 //Get spotify process id
                 int process_id = get_spotify_pid();
 
@@ -133,6 +132,9 @@ namespace Spotify_Ad_Mute
                         Console.WriteLine("Now Playing: '" + now_playing_track + "' by '" + now_playing_artist + "'");
                     }
                 }
+
+                //If the user is dragging something in the spotify interface, do nothing
+                else if (window_title == "Drag") { }
 
                 //If blank window title
                 else if (window_title == "")
