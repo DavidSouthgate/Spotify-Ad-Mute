@@ -95,7 +95,6 @@ namespace Spotify_Ad_Mute
             //Loop while loop_again is true
             while(true)
             {
-
                 //Get spotify process id
                 int process_id = get_spotify_pid();
 
@@ -134,6 +133,9 @@ namespace Spotify_Ad_Mute
                     }
                 }
 
+                //If the user is dragging something in the spotify interface, do nothing
+                else if (window_title == "Drag") { }
+
                 //If blank window title
                 else if (window_title == "")
                 {
@@ -141,7 +143,7 @@ namespace Spotify_Ad_Mute
                     //Output error if one hasn't been outputted in the last 10 seconds.
                     if ((DateTime.Now - last_no_process_error).TotalSeconds > 10)
                     {
-                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimused to the tray?");
+                        Console.WriteLine("ERROR: Spotify process not found. Is spotify running and not minimised to the tray?");
 
                         //Set last no process date time to now
                         last_no_process_error = DateTime.Now;
