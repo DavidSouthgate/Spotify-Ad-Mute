@@ -31,6 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.listBoxOutput = new System.Windows.Forms.ListBox();
             this.timerCheckSpotify = new System.Windows.Forms.Timer(this.components);
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.SuspendLayout();
             // 
             // listBoxOutput
@@ -46,6 +47,11 @@
             this.timerCheckSpotify.Enabled = true;
             this.timerCheckSpotify.Interval = 1000;
             this.timerCheckSpotify.Tick += new System.EventHandler(this.timerCheckSpotify_Tick);
+            // 
+            // notifyIcon
+            // 
+            this.notifyIcon.Text = "notifyIcon1";
+            this.notifyIcon.Visible = true;
             // 
             // frmConfig
             // 
@@ -64,6 +70,7 @@
 
         private System.Windows.Forms.ListBox listBoxOutput;
         private System.Windows.Forms.Timer timerCheckSpotify;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
     }
 }
 
