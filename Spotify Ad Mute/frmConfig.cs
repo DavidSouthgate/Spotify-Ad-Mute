@@ -16,12 +16,13 @@ namespace Spotify_Ad_Mute
     public partial class frmConfig : Form
     {
 
-        string version;
-
-        DateTime last_no_process_error = new DateTime();
-        string now_playing_artist = "";
-        string now_playing_track = "";
-        bool mute_flag;
+        string version;                                     //String which stores the program version
+        DateTime last_no_process_error = new DateTime();    //DateTime used to store when the last no process error was shown
+        string now_playing_artist = "";                     //String which stores now playing artist
+        string now_playing_track = "";                      //String which stores now playing track
+        bool mute_flag;                                     //Boolean which stores whether the program has muted the system
+        bool enabled = true;                                //Boolean which stores the enabled status of the program
+        bool force_close = false;                           //When true, the program will actually close when close event triggers
 
         public frmConfig()
         {
@@ -65,33 +66,15 @@ namespace Spotify_Ad_Mute
         /// <param name="output">String to output</param>
         private void output(string output)
         {
-            listBoxOutput.Items.Add(output);
+
+            //Write output to debug
             Debug.WriteLine(output);
-        }
 
-        private void frmConfig_Load(object sender, EventArgs e)
-        {
+            //Add output to output list box
+            listBoxOutput.Items.Add(output);
 
-            //Get the program version
-            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            version = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
-
-            //Output initial command line stuff
-            output("Spotfy Ad Mute [Version " + version + "]");
-            output("(c) 2015-2016 David Southgate");
-            output("");
-
-            //Unmute the volume and store that status in a boolean
-            Volume_Control.unmute(this.Handle);
-            mute_flag = false;
-
-            notifyIcon.ContextMenu.MenuItems.Add("XXX", ExitApplication);
-
-        }
-
-        private void ExitApplication(object sender, EventArgs e)
-        {
-
+            //Move to to end of the output list box
+            listBoxOutput.SelectedIndex = listBoxOutput.Items.Count - 1;
         }
 
         private void timerCheckSpotify_Tick(object sender, EventArgs e)
@@ -165,20 +148,120 @@ namespace Spotify_Ad_Mute
             }
         }
 
-        private void frmConfig_FormClosing(object sender, FormClosingEventArgs e)
+        //===========================================================================
+        // FORM EVENTS
+        //===========================================================================
+
+        private void frmConfig_Load(object sender, EventArgs e)
         {
-            this.Hide();
-            e.Cancel = true;
+
+            //Get the program version
+            System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+            version = FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+
+            //Output initial command line stuff
+            output("Spotfy Ad Mute [Version " + version + "]");
+            output("(c) 2015-2016 David Southgate");
+            output("");
+
+            //Unmute the volume and store that status in a boolean
+            Volume_Control.unmute(this.Handle);
+            mute_flag = false;
         }
 
+        /// <summary>
+        /// Show the form when the form is shown
+        /// </summary>
+        private void frmConfig_Shown(object sender, EventArgs e)
+        {
+            this.Hide();
+        }
+
+        /// <summary>
+        /// When the form is closing, just hide it instead (if force_close == false)
+        /// </summary>
+        private void frmConfig_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if(!force_close)
+            {
+                this.Hide();
+                e.Cancel = true;
+            }
+        }
+
+        //===========================================================================
+        // ENABLE DISABLE
+        //===========================================================================
+
+        /// <summary>
+        /// Toggles whether program is enabled
+        /// </summary>
+        private void enabledtoggle()
+        {
+
+            //Toggle enabled
+            enabled = !enabled;
+
+            //Set notify icon menu item checked value
+            contextMenuNotifyIconItemEnabled.Checked = enabled;
+
+            //Set whether the timer is enabled
+            timerCheckSpotify.Enabled = enabled;
+
+            if(enabled)
+            {
+                output("Program Enabled");
+            }
+            else
+            {
+                output("Program Disabled");
+            }
+        }
+
+        //===========================================================================
+        // NOTIFY ICON
+        //===========================================================================
+
+        /// <summary>
+        /// When the notify icon is double clicked, open the GUI
+        /// </summary>
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             this.Show();
         }
 
-        private void frmConfig_Shown(object sender, EventArgs e)
+        /// <summary>
+        /// When the enabled context menu is clicked, toggle enabled
+        /// </summary>
+        private void contextMenuNotifyIconItemEnabled_Click(object sender, EventArgs e)
         {
-            this.Hide();
+            enabledtoggle();
+        }
+
+        /// <summary>
+        /// When the enabled exit menu is clicked, exit the program
+        /// </summary>
+        private void contextMenuNotifyIconItemExit_Click(object sender, EventArgs e)
+        {
+            force_close = true;
+            this.Close();
+        }
+
+        //===========================================================================
+        // MENU STRIP
+        //===========================================================================
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            force_close = true;
+            this.Close();
+        }
+
+        private void menuStripItemAbout_Click(object sender, EventArgs e)
+        {
+            //Display about form
+            frmAbout frmAbout = new frmAbout();
+            frmAbout.ShowDialog(this);
         }
     }
 }

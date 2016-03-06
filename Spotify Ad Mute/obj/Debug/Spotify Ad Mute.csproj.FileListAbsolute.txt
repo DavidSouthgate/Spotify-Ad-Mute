@@ -8,3 +8,4 @@ G:\Documents\GitHub\Spotify-Ad-Mute\Spotify Ad Mute\obj\Debug\Spotify_Ad_Mute.Pr
 G:\Documents\GitHub\Spotify-Ad-Mute\Spotify Ad Mute\obj\Debug\Spotify Ad Mute.csproj.GenerateResource.Cache
 G:\Documents\GitHub\Spotify-Ad-Mute\Spotify Ad Mute\obj\Debug\Spotify Ad Mute.exe
 G:\Documents\GitHub\Spotify-Ad-Mute\Spotify Ad Mute\obj\Debug\Spotify Ad Mute.pdb
+G:\Documents\GitHub\Spotify-Ad-Mute\Spotify Ad Mute\obj\Debug\Spotify_Ad_Mute.frmAbout.resources
