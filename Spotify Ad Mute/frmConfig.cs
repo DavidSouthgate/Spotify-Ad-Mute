@@ -84,6 +84,14 @@ namespace Spotify_Ad_Mute
             //Unmute the volume and store that status in a boolean
             Volume_Control.unmute(this.Handle);
             mute_flag = false;
+
+            notifyIcon.ContextMenu.MenuItems.Add("XXX", ExitApplication);
+
+        }
+
+        private void ExitApplication(object sender, EventArgs e)
+        {
+
         }
 
         private void timerCheckSpotify_Tick(object sender, EventArgs e)
@@ -155,6 +163,22 @@ namespace Spotify_Ad_Mute
                     mute_flag = true;
                 }
             }
+        }
+
+        private void frmConfig_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Hide();
+            e.Cancel = true;
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.Show();
+        }
+
+        private void frmConfig_Shown(object sender, EventArgs e)
+        {
+            this.Hide();
         }
     }
 }

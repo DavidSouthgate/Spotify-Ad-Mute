@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmConfig));
             this.listBoxOutput = new System.Windows.Forms.ListBox();
             this.timerCheckSpotify = new System.Windows.Forms.Timer(this.components);
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
@@ -50,8 +51,10 @@
             // 
             // notifyIcon
             // 
+            this.notifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon.Icon")));
             this.notifyIcon.Text = "notifyIcon1";
             this.notifyIcon.Visible = true;
+            this.notifyIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon_MouseDoubleClick);
             // 
             // frmConfig
             // 
@@ -61,7 +64,9 @@
             this.Controls.Add(this.listBoxOutput);
             this.Name = "frmConfig";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmConfig_FormClosing);
             this.Load += new System.EventHandler(this.frmConfig_Load);
+            this.Shown += new System.EventHandler(this.frmConfig_Shown);
             this.ResumeLayout(false);
 
         }
